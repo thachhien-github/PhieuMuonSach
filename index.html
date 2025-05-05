@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Phiếu Mượn Sách</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="bgboxcenter">
+      <h1>PHIẾU MƯỢN SÁCH</h1>
+      <div class="row">
+        <div class="boxleft">Họ và tên</div>
+        <div class="boxright"><input id="hoten" type="text" value="" /></div>
+      </div>
+      <div class="row">
+        <div class="boxleft">Giới tính</div>
+        <div class="boxright">
+          <input type="radio" id="radnam" name="gioitinh" checked="checked" />
+          Nam <input type="radio" id="radnu" name="gioitinh" /> Nữ
+        </div>
+      </div>
+      <div class="row">
+        <div class="boxleft">Ngày mượn</div>
+        <div class="boxright">
+          <input id="ngaymuon" type="text" value="" placeholder="dd/mm/yyyy" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="boxleft">Số CCCD</div>
+        <div class="boxright"><input id="socccd" type="text" value="" /></div>
+      </div>
+      <div class="row">
+        <div class="boxleft">Khoa</div>
+        <div class="boxright">
+          <select name="cbokhoa" id="cbokhoa"></select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="boxleft">Số ngày</div>
+        <div class="boxright"><input id="songay" type="text" value="" /></div>
+      </div>
+      <div id="ketqua" class="row ketqua"></div>
+      <div class="row btn">
+        <input id="thuchien" class="button" type="button" value="Đăng ký" />
+        <input id="taomoi" class="button" type="button" value="Tạo mới" />
+      </div>
+    </div>
+    <script>
+      function formatDate(dateStr) {
+        const parts = dateStr.split(/[-\/]/);
+        if (parts.length !== 3) return null;
+        let day = parts[0].padStart(2, "0");
+        let month = parts[1].padStart(2, "0");
+        const year = parts[2];
+        return `${day}/${month}/${year}`;
+      }
+
+      function validateDate(date) {
+        const regex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+        if (!regex.test(date)) return false;
+        const [day, month, year] = date.split("/").map(Number);
+        const dateObj = new Date(year, month - 1, day);
+        return (
+          dateObj.getFullYear() === year &&
+          dateObj.getMonth() === month - 1 &&
+          dateObj.getDate() === day
+        );
+      }
+
+      document
+        .getElementById("thuchien")
+        .addEventListener("click", function () {
+          const hoten = document.getElementById("hoten").value.trim();
+          const gioitinh = document
+            .querySelector('input[name="gioitinh"]:checked')
+            .nextSibling.nodeValue.trim();
+          const ngaymuon = document.getElementById("ngaymuon").value.trim();
+          const socccd = document.getElementById("socccd").value.trim();
+          const Khoa = document.getElementById("cbokhoa").value;
+          const songay = document.getElementById("songay").value.trim();
+
+          if (!hoten) {
+            document.getElementById("ketqua").innerHTML =
+              "<span class='error'>Họ và tên không được để trống.</span>";
+            return;
+          }
+          const formattedDate = formatDate(ngaymuon);
+          if (!formattedDate || !validateDate(formattedDate)) {
+            document.getElementById("ketqua").innerHTML =
+              "<span class='error'>Ngày mượn không hợp lệ. Vui lòng nhập theo định dạng dd/mm/yyyy.</span>";
+            return;
+          }
+          if (!socccd) {
+            document.getElementById("ketqua").innerHTML =
+              "<span class='error'>Số CCCD không được để trống.</span>";
+            return;
+          }
+          if (!songay) {
+            document.getElementById("ketqua").innerHTML =
+              "<span class='error'>Số ngày không được để trống.</span>";
+            return;
+          }
+          document.getElementById("ketqua").innerHTML = `
+        Họ và tên: ${hoten}<br>
+        Giới tính: ${gioitinh}<br>
+        Ngày mượn: ${formattedDate}<br>
+        Số CCCD: ${socccd}<br>
+        Khoa: ${Khoa}<br>
+        Số ngày: ${songay}<br>
+      `;
+        });
+
+      document.getElementById("taomoi").addEventListener("click", function () {
+        document.getElementById("hoten").value = "";
+        document.getElementById("radnam").checked = true;
+        document.getElementById("ngaymuon").value = "";
+        document.getElementById("socccd").value = "";
+        document.getElementById("cbokhoa").selectedIndex = 0;
+        document.getElementById("ketqua").innerHTML = "";
+        document.getElementById("songay").value = "";
+      });
+
+      window.onload = function () {
+        const cbokhoa = document.getElementById("cbokhoa");
+        const khoaList = [
+          "Công Nghệ Thông Tin",
+          "Kỹ Thuật Điện Tử",
+          "Kỹ Thuật Ô Tô",
+          "Quản Trị Kinh Doanh",
+        ];
+        khoaList.forEach((khoa) => {
+          const option = document.createElement("option");
+          option.text = khoa;
+          cbokhoa.add(option);
+        });
+      };
+    </script>
+    <script src="script.js"></script>
+  </body>
+</html>
