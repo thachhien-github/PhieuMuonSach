@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Thực hành Validation</title>
+    <link rel="stylesheet" href="./css/thuchanh.css" />
+  </head>
+  <body>
+    <form onsubmit="return kiemTraForm()">
+      <h2>Phiếu Mượn Sách</h2>
+
+      <div class="form__item">
+        <label for="hoTen">Họ tên:</label>
+        <input type="text" id="hoTen" />
+      </div>
+      <span id="baoLoiHoTen" class="loi"></span>
+
+      <div class="form__item">
+        <label for="ngaySinh">Ngày sinh:</label>
+        <input type="text" id="ngaySinh" placeholder="dd/mm/yyyy" />
+      </div>
+      <span id="loiNgaySinh" class="loi"></span>
+
+      <div class="form__item">
+        <label for="ngayMuon">Ngày mượn:</label>
+        <input type="text" id="ngayMuon" placeholder="dd/mm/yyyy" />
+      </div>
+      <span id="loiNgayMuon" class="loi"></span>
+
+      <div class="form__item">
+        <label>Giới tính:</label>
+        <input type="radio" name="gioiTinh" value="Nam" id="gtNam" />
+        <label for="gtNam">Nam</label>
+        <input type="radio" name="gioiTinh" value="Nữ" id="gtNu" />
+        <label for="gtNu">Nữ</label>
+      </div>
+      <span id="baoLoiGioiTinh" class="loi"></span>
+
+      <div class="form__item">
+        <label for="cccd">CCCD:</label>
+        <input type="text" id="cccd" />
+      </div>
+      <span id="baoLoiCCCD" class="loi"></span>
+
+      <div class="form__item">
+        <label for="soNgay">Số ngày mượn:</label>
+        <input type="text" id="soNgay" />
+      </div>
+      <span id="baoLoiSoNgay" class="loi"></span>
+
+      <div class="form__item">
+        <label for="cbSach">Chọn sách:</label>
+        <select id="cbSach"></select>
+      </div>
+      <span id="baoLoiSach" class="loi"></span>
+
+      <div class="btn">
+        <button type="submit">Xác nhận</button>
+      </div>
+    </form>
+
+    <script>
+      // HÀM KIỂM TRA NGÀY HỢP LỆ
+      function kiemTraNgayHopLe(idInput, idBaoLoi) {
+        var ngayChuoi = document.getElementById(idInput).value.trim();
+        var baoLoi = document.getElementById(idBaoLoi);
+
+        var arr = ngayChuoi.split("/");
+        if (arr.length !== 3) {
+          baoLoi.innerText = "Sai định dạng (dd/mm/yyyy)";
+          return false;
+        }
+
+        var ngay = parseInt(arr[0], 10);
+        var thang = parseInt(arr[1], 10);
+        var nam = parseInt(arr[2], 10);
+        var chuoiNgay = thang + "/" + ngay + "/" + nam;
+        var d = new Date(chuoiNgay);
+
+        if (
+          isNaN(d.getTime()) ||
+          d.getDate() !== ngay ||
+          d.getMonth() !== thang - 1 ||
+          d.getFullYear() !== nam
+        ) {
+          baoLoi.innerText = "Ngày không hợp lệ!";
+          return false;
+        }
+
+        baoLoi.innerText = "";
+        return true;
+      }
+
+      // DANH SÁCH SÁCH MẪU
+      var arrSach = [
+        { id: 1, tenSach: "Lập trình C++" },
+        { id: 2, tenSach: "Phân tích hệ thống" },
+        { id: 3, tenSach: "HTML & CSS cơ bản" },
+      ];
+
+      // Tạo nội dung combobox sách
+      var cbSach = document.getElementById("cbSach");
+      var chuoiHTML = `<option value="0">--- Chọn sách ---</option>`;
+      var arrHTML = arrSach.map(function (value) {
+        return `<option value="${value.id}">${value.tenSach}</option>`;
+      });
+      chuoiHTML += arrHTML.join("");
+      cbSach.innerHTML = chuoiHTML;
+
+      // HÀM KIỂM TRA TOÀN BỘ FORM
+      function kiemTraForm() {
+        var hopLe = true;
+
+        // Họ tên
+        var hoTen = document.getElementById("hoTen").value.trim();
+        var baoLoiHoTen = document.getElementById("baoLoiHoTen");
+        if (hoTen.length === 0 || hoTen.split(" ").length < 2) {
+          baoLoiHoTen.innerText = "Vui lòng nhập đầy đủ họ tên (ít nhất 2 từ)";
+          hopLe = false;
+        }
+
+        // Ngày sinh
+        if (!kiemTraNgayHopLe("ngaySinh", "loiNgaySinh")) {
+          hopLe = false;
+        }
+
+        // Ngày mượn
+        if (!kiemTraNgayHopLe("ngayMuon", "loiNgayMuon")) {
+          hopLe = false;
+        }
+
+        // Giới tính
+        var gioiTinhChon = document.querySelector(
+          'input[name="gioiTinh"]:checked'
+        );
+        var baoLoiGioiTinh = document.getElementById("baoLoiGioiTinh");
+        if (!gioiTinhChon) {
+          baoLoiGioiTinh.innerText = "Vui lòng chọn giới tính";
+          hopLe = false;
+        }
+
+        // CCCD
+        var cccd = document.getElementById("cccd").value.trim();
+        var baoLoiCCCD = document.getElementById("baoLoiCCCD");
+        var hopLeCCCD = true;
+
+        if (cccd.length !== 12) {
+          hopLeCCCD = false;
+        } else {
+          for (var i = 0; i < cccd.length; i++) {
+            if (cccd[i] < "0" || cccd[i] > "9") {
+              hopLeCCCD = false;
+              break;
+            }
+          }
+        }
+
+        if (!hopLeCCCD) {
+          baoLoiCCCD.innerText = "CCCD phải đủ 12 chữ số";
+          hopLe = false;
+        } else {
+          baoLoiCCCD.innerText = "";
+        }
+
+        // Số ngày mượn
+        var soNgay = document.getElementById("soNgay").value.trim();
+        var baoLoiSoNgay = document.getElementById("baoLoiSoNgay");
+        var so = parseInt(soNgay, 10);
+        if (isNaN(so) || so <= 0) {
+          baoLoiSoNgay.innerText = "Số ngày mượn phải là số nguyên dương";
+          hopLe = false;
+        }
+
+        // Sách
+        var baoLoiSach = document.getElementById("baoLoiSach");
+        if (cbSach.value === "0") {
+          baoLoiSach.innerText = "Vui lòng chọn sách";
+          hopLe = false;
+        }
+
+        return hopLe;
+      }
+
+      // Gắn sự kiện blur
+      function setupSuKien() {
+        // Họ tên: kiểm tra khi rời khỏi ô
+        document.getElementById("hoTen").addEventListener("blur", function () {
+          var val = this.value.trim();
+          var baoLoi = document.getElementById("baoLoiHoTen");
+          if (val.length < 1 || val.split(" ").length < 2) {
+            baoLoi.innerText = "Vui lòng nhập đầy đủ họ tên (ít nhất 2 từ)";
+          } else {
+            baoLoi.innerText = "";
+          }
+        });
+
+        // Ngày sinh
+        document
+          .getElementById("ngaySinh")
+          .addEventListener("blur", function () {
+            kiemTraNgayHopLe("ngaySinh", "loiNgaySinh");
+          });
+
+        // Ngày mượn
+        document
+          .getElementById("ngayMuon")
+          .addEventListener("blur", function () {
+            kiemTraNgayHopLe("ngayMuon", "loiNgayMuon");
+          });
+
+        // CCCD
+        document.getElementById("cccd").addEventListener("blur", function () {
+          var val = this.value.trim();
+          var hopLe = true;
+
+          if (val.length !== 12) {
+            hopLe = false;
+          } else {
+            for (var i = 0; i < val.length; i++) {
+              if (val[i] < "0" || val[i] > "9") {
+                hopLe = false;
+                break;
+              }
+            }
+          }
+
+          var baoLoi = document.getElementById("baoLoiCCCD");
+          if (!hopLe) {
+            baoLoi.innerText = "CCCD phải đủ 12 chữ số";
+          } else {
+            baoLoi.innerText = "";
+          }
+        });
+
+        // Số ngày mượn
+        document.getElementById("soNgay").addEventListener("blur", function () {
+          var val = parseInt(this.value.trim(), 10);
+          var baoLoi = document.getElementById("baoLoiSoNgay");
+          if (isNaN(val) || val <= 0) {
+            baoLoi.innerText = "Số ngày mượn phải là số nguyên dương";
+          } else {
+            baoLoi.innerText = "";
+          }
+        });
+
+        // Giới tính
+        var radios = document.querySelectorAll('input[name="gioiTinh"]');
+        radios.forEach(function (radio) {
+          radio.addEventListener("change", function () {
+            document.getElementById("baoLoiGioiTinh").innerText = "";
+          });
+        });
+
+        // Chọn sách
+        document
+          .getElementById("cbSach")
+          .addEventListener("change", function () {
+            if (this.value !== "0") {
+              document.getElementById("baoLoiSach").innerText = "";
+            }
+          });
+      }
+
+      //SỰ KIỆN ẨN LỖI KHI NHẬP LẠI
+      function anLoiKhiNhap(idInput, idBaoLoi) {
+        document.getElementById(idInput).addEventListener("input", function () {
+          document.getElementById(idBaoLoi).innerText = "";
+        });
+      }
+
+      anLoiKhiNhap("hoTen", "baoLoiHoTen");
+      anLoiKhiNhap("ngaySinh", "loiNgaySinh");
+      anLoiKhiNhap("ngayMuon", "loiNgayMuon");
+      anLoiKhiNhap("cccd", "baoLoiCCCD");
+      anLoiKhiNhap("soNgay", "baoLoiSoNgay");
+
+      document
+        .querySelectorAll('input[name="gioiTinh"]')
+        .forEach(function (radio) {
+          radio.addEventListener("change", function () {
+            document.getElementById("baoLoiGioiTinh").innerText = "";
+          });
+        });
+
+      document.getElementById("cbSach").addEventListener("change", function () {
+        document.getElementById("baoLoiSach").innerText = "";
+      });
+
+      setupSuKien();
+    </script>
+  </body>
+</html>
