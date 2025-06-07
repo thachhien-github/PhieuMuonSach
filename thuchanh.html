@@ -23,12 +23,6 @@
       <span id="loiNgaySinh" class="loi"></span>
 
       <div class="form__item">
-        <label for="ngayMuon">Ngày mượn:</label>
-        <input type="text" id="ngayMuon" placeholder="dd/mm/yyyy" />
-      </div>
-      <span id="loiNgayMuon" class="loi"></span>
-
-      <div class="form__item">
         <label>Giới tính:</label>
         <input type="radio" name="gioiTinh" value="Nam" id="gtNam" />
         <label for="gtNam">Nam</label>
@@ -42,6 +36,12 @@
         <input type="text" id="cccd" />
       </div>
       <span id="baoLoiCCCD" class="loi"></span>
+
+      <div class="form__item">
+        <label for="ngayMuon">Ngày mượn:</label>
+        <input type="text" id="ngayMuon" placeholder="dd/mm/yyyy" />
+      </div>
+      <span id="loiNgayMuon" class="loi"></span>
 
       <div class="form__item">
         <label for="soNgay">Số ngày mượn:</label>
@@ -128,6 +128,21 @@
         // Ngày mượn
         if (!kiemTraNgayHopLe("ngayMuon", "loiNgayMuon")) {
           hopLe = false;
+        }
+
+        // Kiểm tra ngày sinh trước ngày mượn
+        var ngaySinhValue = document.getElementById("ngaySinh").value;
+        var ngayMuonValue = document.getElementById("ngayMuon").value;
+        var baoLoiNgayMuon = document.getElementById("loiNgayMuon");
+
+        if (ngaySinhValue && ngayMuonValue) {
+          var dNgaySinh = new Date(ngaySinhValue);
+          var dNgayMuon = new Date(ngayMuonValue);
+
+          if (dNgaySinh >= dNgayMuon) {
+            baoLoiNgayMuon.innerText = "*Ngày mượn phải sau ngày sinh";
+            hopLe = false;
+          }
         }
 
         // Giới tính
