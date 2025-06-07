@@ -204,7 +204,7 @@
           var val = this.value.trim();
           var baoLoi = document.getElementById("baoLoiHoTen");
           if (val.length < 1 || val.split(" ").length < 2) {
-            baoLoi.innerText = "Vui lòng nhập đầy đủ họ tên (ít nhất 2 từ)";
+            baoLoi.innerText = "*Vui lòng nhập đầy đủ họ tên (ít nhất 2 từ)";
           } else {
             baoLoi.innerText = "";
           }
@@ -224,6 +224,21 @@
             kiemTraNgayHopLe("ngayMuon", "loiNgayMuon");
           });
 
+        // Kiểm tra ngày sinh trước ngày mượn
+        var ngaySinhValue = document.getElementById("ngaySinh").value;
+        var ngayMuonValue = document.getElementById("ngayMuon").value;
+        var baoLoiNgayMuon = document.getElementById("loiNgayMuon");
+
+        if (ngaySinhValue && ngayMuonValue) {
+          var dNgaySinh = new Date(ngaySinhValue);
+          var dNgayMuon = new Date(ngayMuonValue);
+
+          if (dNgaySinh >= dNgayMuon) {
+            baoLoiNgayMuon.innerText = "*Ngày mượn phải sau ngày sinh";
+            hopLe = false;
+          }
+        }
+
         // CCCD
         document.getElementById("cccd").addEventListener("blur", function () {
           var val = this.value.trim();
@@ -242,7 +257,7 @@
 
           var baoLoi = document.getElementById("baoLoiCCCD");
           if (!hopLe) {
-            baoLoi.innerText = "CCCD phải đủ 12 chữ số";
+            baoLoi.innerText = "*CCCD phải đủ 12 chữ số";
           } else {
             baoLoi.innerText = "";
           }
@@ -253,7 +268,7 @@
           var val = parseInt(this.value.trim(), 10);
           var baoLoi = document.getElementById("baoLoiSoNgay");
           if (isNaN(val) || val <= 0) {
-            baoLoi.innerText = "Số ngày mượn phải là số nguyên dương";
+            baoLoi.innerText = "*Số ngày mượn phải là số nguyên dương";
           } else {
             baoLoi.innerText = "";
           }
