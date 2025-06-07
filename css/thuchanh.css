@@ -35,10 +35,9 @@ form h2 {
 form .form__item {
   display: flex;
   align-items: center;
-  margin-bottom: 15px;
 }
 
-label {
+.form__item label {
   display: inline-block;
   width: 110px;
   font-weight: 600;
@@ -57,11 +56,12 @@ select {
 
 .loi {
   display: block;
-  margin-top: 4px;
+  margin-bottom: 10px;
   color: red;
   font-size: 0.85rem;
-  padding-left: 110px; /* thay vì margin-left để canh đều */
-  min-height: 18px; /* đảm bảo không bị nhảy layout khi chưa có lỗi */
+  font-style: italic;
+  padding-left: 110px;
+  min-height: 16px;
 }
 
 select:hover {

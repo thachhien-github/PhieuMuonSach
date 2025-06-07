@@ -68,7 +68,7 @@
 
         var arr = ngayChuoi.split("/");
         if (arr.length !== 3) {
-          baoLoi.innerText = "Sai định dạng (dd/mm/yyyy)";
+          baoLoi.innerText = "*Sai định dạng (dd/mm/yyyy)";
           return false;
         }
 
@@ -84,7 +84,7 @@
           d.getMonth() !== thang - 1 ||
           d.getFullYear() !== nam
         ) {
-          baoLoi.innerText = "Ngày không hợp lệ!";
+          baoLoi.innerText = "*Ngày không hợp lệ!";
           return false;
         }
 
@@ -116,7 +116,7 @@
         var hoTen = document.getElementById("hoTen").value.trim();
         var baoLoiHoTen = document.getElementById("baoLoiHoTen");
         if (hoTen.length === 0 || hoTen.split(" ").length < 2) {
-          baoLoiHoTen.innerText = "Vui lòng nhập đầy đủ họ tên (ít nhất 2 từ)";
+          baoLoiHoTen.innerText = "*Vui lòng nhập đầy đủ họ tên (ít nhất 2 từ)";
           hopLe = false;
         }
 
@@ -136,7 +136,7 @@
         );
         var baoLoiGioiTinh = document.getElementById("baoLoiGioiTinh");
         if (!gioiTinhChon) {
-          baoLoiGioiTinh.innerText = "Vui lòng chọn giới tính";
+          baoLoiGioiTinh.innerText = "*Vui lòng chọn giới tính";
           hopLe = false;
         }
 
@@ -157,7 +157,7 @@
         }
 
         if (!hopLeCCCD) {
-          baoLoiCCCD.innerText = "CCCD phải đủ 12 chữ số";
+          baoLoiCCCD.innerText = "*CCCD phải đủ 12 chữ số";
           hopLe = false;
         } else {
           baoLoiCCCD.innerText = "";
@@ -168,14 +168,14 @@
         var baoLoiSoNgay = document.getElementById("baoLoiSoNgay");
         var so = parseInt(soNgay, 10);
         if (isNaN(so) || so <= 0) {
-          baoLoiSoNgay.innerText = "Số ngày mượn phải là số nguyên dương";
+          baoLoiSoNgay.innerText = "*Số ngày mượn phải là số nguyên dương";
           hopLe = false;
         }
 
         // Sách
         var baoLoiSach = document.getElementById("baoLoiSach");
         if (cbSach.value === "0") {
-          baoLoiSach.innerText = "Vui lòng chọn sách";
+          baoLoiSach.innerText = "*Vui lòng chọn sách";
           hopLe = false;
         }
 
